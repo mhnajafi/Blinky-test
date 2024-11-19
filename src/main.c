@@ -9,7 +9,7 @@
 #include <zephyr/drivers/gpio.h>
 
 /* 1000 msec = 1 sec */
-#define SLEEP_TIME_MS   1000
+#define SLEEP_TIME_MS   500
 
 /* The devicetree node identifier for the "led0" alias. */
 #define LED0_NODE DT_ALIAS(led0)
@@ -24,12 +24,18 @@ static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
 static const struct gpio_dt_spec led1 = GPIO_DT_SPEC_GET(LED1_NODE, gpios);
 static const struct gpio_dt_spec led2 = GPIO_DT_SPEC_GET(LED2_NODE, gpios);
 
+
+void reset_to_uf2(void) {
+  NRF_POWER->GPREGRET = 0x57; // 0xA8 OTA, 0x4e Serial
+  NVIC_SystemReset();         // or sd_nvic_SystemReset();
+}
+
 int main(void)
 {
 	int ret;
 	bool led_state = true;
 
-	printf("Start of Program V 3.01 \n");
+	printf("Start of Program V 2.05 \n");
 
 
 	if (!gpio_is_ready_dt(&led)) {
@@ -43,8 +49,8 @@ int main(void)
 	}
 
 	// ret = gpio_pin_configure_dt(&led, GPIO_OUTPUT_ACTIVE);
-	// ret = gpio_pin_configure_dt(&led1, GPIO_OUTPUT_ACTIVE);
-	 ret = gpio_pin_configure_dt(&led2, GPIO_OUTPUT_ACTIVE);
+	ret = gpio_pin_configure_dt(&led1, GPIO_OUTPUT_ACTIVE);
+	// ret = gpio_pin_configure_dt(&led2, GPIO_OUTPUT_ACTIVE);
 	
 
 	if (ret < 0) {
@@ -53,10 +59,12 @@ int main(void)
 
 	printf("Initializaion complete\n");
 
+	int counter=0;
+
 	while (1) {
 		// ret = gpio_pin_toggle_dt(&led);
-		// ret = gpio_pin_toggle_dt(&led1);
-		ret = gpio_pin_toggle_dt(&led2);
+		ret = gpio_pin_toggle_dt(&led1);
+		// ret = gpio_pin_toggle_dt(&led2);
 		
 		
 		if (ret < 0) {
@@ -66,6 +74,10 @@ int main(void)
 		led_state = !led_state;
 		printf("LED state: %s\n", led_state ? "ON" : "OFF");
 		k_msleep(SLEEP_TIME_MS);
+
+		if( counter > 10) reset_to_uf2();
+		else counter++;
+
 	}
 	return 0;
 }
