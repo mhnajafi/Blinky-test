@@ -512,6 +512,27 @@
 				has-dpd;
 				t-enter-dpd = < 0xbb8 >;
 				t-exit-dpd = < 0x1f40 >;
+				partitions {
+					compatible = "fixed-partitions";
+					#address-cells = < 0x1 >;
+					#size-cells = < 0x1 >;
+					slot2_partition: partition@0 {
+						label = "modules-image";
+						reg = < 0x0 0x100000 >;
+					};
+					layout_partition: partition@180000 {
+						label = "layout_partition";
+						reg = < 0x180000 0x2710 >;
+					};
+					log_partition: partition@190000 {
+						label = "log_partition";
+						reg = < 0x190000 0x2710 >;
+					};
+					reserve_partition: partition@1a0000 {
+						label = "reserve_partition";
+						reg = < 0x1a0000 0x2710 >;
+					};
+				};
 			};
 		};
 		pwm3: pwm@4002d000 {

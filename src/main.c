@@ -8,6 +8,8 @@
 #include <zephyr/kernel.h>
 #include <zephyr/drivers/gpio.h>
 
+#include "spi_flash.h"
+
 /* 1000 msec = 1 sec */
 #define SLEEP_TIME_MS   500
 
@@ -38,32 +40,63 @@ int main(void)
 	printf("Start of Program V 2.05 \n");
 
 
-	if (!gpio_is_ready_dt(&led)) {
-		return 0;
-	}
-	if (!gpio_is_ready_dt(&led1)) {
-		return 0;
-	}
-	if (!gpio_is_ready_dt(&led2)) {
-		return 0;
-	}
+	// if (!gpio_is_ready_dt(&led)) {
+	// 	return 0;
+	// }
+	// if (!gpio_is_ready_dt(&led1)) {
+	// 	return 0;
+	// }
+	// if (!gpio_is_ready_dt(&led2)) {
+	// 	return 0;
+	// }
 
 	// ret = gpio_pin_configure_dt(&led, GPIO_OUTPUT_ACTIVE);
-	ret = gpio_pin_configure_dt(&led1, GPIO_OUTPUT_ACTIVE);
+	// ret = gpio_pin_configure_dt(&led1, GPIO_OUTPUT_ACTIVE);
 	// ret = gpio_pin_configure_dt(&led2, GPIO_OUTPUT_ACTIVE);
 	
 
-	if (ret < 0) {
-		return 0;
-	}
+	// if (ret < 0) {
+	// 	return 0;
+	// }
+
+	spiflash_init();
 
 	printf("Initializaion complete\n");
 
 	int counter=0;
 
+
+
+
+	lfs_file_t file;
+
+	if (lfs_file_open(&m_firmware_littlefs,&file,"first-fil.txt",LFS_O_RDWR)==0)
+	{
+
+
+	}
+	else
+	{
+		printf("\nFile is not exist!\n");
+	}
+
+
+
+	// if (fs_open(&file, "/mfmw/first-file.txt", FS_O_READ) == 0) {
+    //     char buffer[64];
+    //     ssize_t read_bytes = fs_read(&file, buffer, sizeof(buffer) - 1);
+    //     if (read_bytes >= 0) {
+    //         buffer[read_bytes] = '\0';  // Null-terminate the read data
+    //         printf("Read from file: %s\n", buffer);
+    //     }
+    //     fs_close(&file);
+    // }
+	
+
+
 	while (1) {
 		// ret = gpio_pin_toggle_dt(&led);
-		ret = gpio_pin_toggle_dt(&led1);
+		// ret = gpio_pin_toggle_dt(&led1);
 		// ret = gpio_pin_toggle_dt(&led2);
 		
 		
@@ -72,8 +105,10 @@ int main(void)
 		}
 
 		led_state = !led_state;
-		printf("LED state: %s\n", led_state ? "ON" : "OFF");
+		// printf("LED state: %s\n", led_state ? "ON" : "OFF");
 		k_msleep(SLEEP_TIME_MS);
+		printf("Hello -- counter = %d\n",counter);
+		
 
 		if( counter > 10) reset_to_uf2();
 		else counter++;

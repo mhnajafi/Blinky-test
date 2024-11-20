@@ -105,6 +105,7 @@
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/debug/CMakeFiles/rebuild_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/fb/CMakeFiles/edit_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/fb/CMakeFiles/rebuild_cache.dir
+/home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/fs/CMakeFiles/subsys__fs.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/fs/CMakeFiles/edit_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/fs/CMakeFiles/rebuild_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/ipc/CMakeFiles/edit_cache.dir
@@ -135,6 +136,8 @@
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/stats/CMakeFiles/rebuild_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/storage/CMakeFiles/edit_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/storage/CMakeFiles/rebuild_cache.dir
+/home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/storage/flash_map/CMakeFiles/edit_cache.dir
+/home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/storage/flash_map/CMakeFiles/rebuild_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/task_wdt/CMakeFiles/edit_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/task_wdt/CMakeFiles/rebuild_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/subsys/testsuite/CMakeFiles/edit_cache.dir
@@ -180,6 +183,9 @@
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/console/CMakeFiles/drivers__console.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/console/CMakeFiles/edit_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/console/CMakeFiles/rebuild_cache.dir
+/home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/flash/CMakeFiles/drivers__flash.dir
+/home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/flash/CMakeFiles/edit_cache.dir
+/home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/flash/CMakeFiles/rebuild_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/gpio/CMakeFiles/drivers__gpio.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/gpio/CMakeFiles/edit_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/gpio/CMakeFiles/rebuild_cache.dir
@@ -194,6 +200,9 @@
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/serial/CMakeFiles/drivers__serial.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/serial/CMakeFiles/edit_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/serial/CMakeFiles/rebuild_cache.dir
+/home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/spi/CMakeFiles/drivers__spi.dir
+/home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/spi/CMakeFiles/edit_cache.dir
+/home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/spi/CMakeFiles/rebuild_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/timer/CMakeFiles/drivers__timer.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/timer/CMakeFiles/edit_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/zephyr/drivers/timer/CMakeFiles/rebuild_cache.dir
@@ -286,6 +295,7 @@
 /home/mhn/zephyrproject/applications/blinky/build/modules/libmetal/CMakeFiles/rebuild_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/modules/liblc3/CMakeFiles/edit_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/modules/liblc3/CMakeFiles/rebuild_cache.dir
+/home/mhn/zephyrproject/applications/blinky/build/modules/littlefs/CMakeFiles/modules__littlefs.dir
 /home/mhn/zephyrproject/applications/blinky/build/modules/littlefs/CMakeFiles/edit_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/modules/littlefs/CMakeFiles/rebuild_cache.dir
 /home/mhn/zephyrproject/applications/blinky/build/modules/loramac-node/CMakeFiles/edit_cache.dir
