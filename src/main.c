@@ -38,18 +38,18 @@ int main(void)
 	printf("Start of Program V 2.05 \n");
 
 
-	if (!gpio_is_ready_dt(&led)) {
-		return 0;
-	}
-	if (!gpio_is_ready_dt(&led1)) {
-		return 0;
-	}
-	if (!gpio_is_ready_dt(&led2)) {
-		return 0;
-	}
+	// if (!gpio_is_ready_dt(&led)) {
+	// 	return 0;
+	// }
+	// if (!gpio_is_ready_dt(&led1)) {
+	// 	return 0;
+	// }
+	// if (!gpio_is_ready_dt(&led2)) {
+	// 	return 0;
+	// }
 
 	// ret = gpio_pin_configure_dt(&led, GPIO_OUTPUT_ACTIVE);
-	ret = gpio_pin_configure_dt(&led1, GPIO_OUTPUT_ACTIVE);
+	// ret = gpio_pin_configure_dt(&led1, GPIO_OUTPUT_ACTIVE);
 	// ret = gpio_pin_configure_dt(&led2, GPIO_OUTPUT_ACTIVE);
 	
 
@@ -63,7 +63,7 @@ int main(void)
 
 	while (1) {
 		// ret = gpio_pin_toggle_dt(&led);
-		ret = gpio_pin_toggle_dt(&led1);
+		// ret = gpio_pin_toggle_dt(&led1);
 		// ret = gpio_pin_toggle_dt(&led2);
 		
 		
@@ -71,9 +71,11 @@ int main(void)
 			return 0;
 		}
 
-		led_state = !led_state;
-		printf("LED state: %s\n", led_state ? "ON" : "OFF");
 		k_msleep(SLEEP_TIME_MS);
+		led_state = !led_state;
+		
+		printf("Hello - Counter = %d\n",counter);
+		
 
 		if( counter > 10) reset_to_uf2();
 		else counter++;
