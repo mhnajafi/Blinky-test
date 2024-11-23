@@ -1157,32 +1157,40 @@ zephyr_udc0: &usbd {
    #address-cells = <1>;
    #size-cells = <1>;
 
-   slot2_partition: partition@0 {
-    label = "modules-image";
-    reg = <0x0 0x00100000>;
-   };
 
-   layout_partition: partition@180000 {
+   layout_partition: partition@0 {
     label = "layout_partition";
-    reg = <0x00180000 10000>;
+    reg = <0x00000000 10000>;
    };
 
-   log_partition: partition@190000 {
+
+   log_partition: partition@10000 {
     label = "log_partition";
-    reg = <0x00190000 10000>;
+    reg = <0x00010000 10000>;
    };
 
-   reserve_partition: partition@1a0000 {
-    label = "reserve_partition";
-    reg = <0x001a0000 10000>;
+
+   slot1_partition: partition@20000 {
+    label = "image-1";
+    reg = <0x00020000 0x000ae000>;
    };
+
+   slot2_partition: partition@ce000 {
+    label = "modules-image";
+    reg = <0x000ce000 0x00100000>;
+   };
+
   };
  };
 };
 
 
- &flash0 {
-# 70 "/home/mhn/zephyrproject/applications/blinky/boards/xiao_ble.overlay"
+
+
+
+
+&flash0 {
+# 77 "/home/mhn/zephyrproject/applications/blinky/boards/xiao_ble.overlay"
  partitions {
   compatible = "fixed-partitions";
   #address-cells = <1>;
@@ -1201,12 +1209,7 @@ zephyr_udc0: &usbd {
 
   slot0_partition: partition@38000 {
    label = "image-0";
-   reg = <0x00038000 0x00057000>;
-  };
-
-  slot1_partition: partition@8f000 {
-   label = "image-1";
-   reg = <0x0008f000 0x00057000>;
+   reg = <0x00038000 0x000AE000>;
   };
 
   scratch_partition: partition@e6000 {
@@ -1230,6 +1233,7 @@ zephyr_udc0: &usbd {
   };
  };
 };
+
 
 
 / {

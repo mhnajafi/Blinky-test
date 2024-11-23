@@ -72,7 +72,7 @@ int main(void)
 
 	if (lfs_file_open(&m_firmware_littlefs,&file,"first-fil.txt",LFS_O_RDWR)==0)
 	{
-
+		printf("\nFile is exist!\n");
 
 	}
 	else

@@ -18,13 +18,13 @@ LOG_MODULE_REGISTER(spi_flash, LOG_LEVEL_DEBUG);
 // Define the flash area ID using the partition label
 #define LAYOUT_PARTITION_ID FIXED_PARTITION_ID(layout_partition)
 #define LOG_PARTITION_ID FIXED_PARTITION_ID(log_partition)
-#define RES_PARTITION_ID FIXED_PARTITION_ID(reserve_partition)
+
 #define M_FIRMWARE_PARTITION_ID FIXED_PARTITION_ID(slot2_partition)
 
 // Partition sizes
 #define LAYOUT_PARTITION_SIZE (1 * 1024 * 1024)       // 1MB
 #define LOG_PARTITION_SIZE (0.5 * 1024 * 1024)        // 0.5 MB
-#define RES_PARTITION_SIZE (1 * 1024 * 1024)          // 1MB
+
 #define M_FIRMWARE_PARTITION_SIZE (1 * 1024 * 1024) // 1.5 MB
 #define FLASH_PARTITION_SIZE                                                                       \
     (LAYOUT_PARTITION_SIZE + LOG_PARTITION_SIZE + RES_PARTITION_SIZE +                             \
@@ -34,7 +34,7 @@ LOG_MODULE_REGISTER(spi_flash, LOG_LEVEL_DEBUG);
 
 #define LAYOUT_PARTITION_BLOCK_COUNT (LAYOUT_PARTITION_SIZE / BLOCK_SIZE)         // 256
 #define LOG_PARTITION_BLOCK_COUNT (LOG_PARTITION_SIZE / BLOCK_SIZE)               // 128
-#define RES_PARTITION_BLOCK_COUNT (RES_PARTITION_SIZE / BLOCK_SIZE)               // 256
+
 #define M_FIRMWARE_PARTITION_BLOCK_COUNT (M_FIRMWARE_PARTITION_SIZE / BLOCK_SIZE) // 384
 
 #define BLOCK_COUNT (FLASH_PARTITION_SIZE / BLOCK_SIZE) // 1024
@@ -42,13 +42,13 @@ LOG_MODULE_REGISTER(spi_flash, LOG_LEVEL_DEBUG);
 // Global flash area pointers to maintain a single open flash area
 const struct flash_area *fa_layout_partition;
 const struct flash_area *fa_log_partition;
-const struct flash_area *fa_res_partition;
+
 const struct flash_area *fa_m_firmware_partition;
 
 // SPI flash status variables for each partition
 enum spi_flash_status layout_partition_status = SPI_FLASH_NOT_DETECTED;
 enum spi_flash_status log_partition_status = SPI_FLASH_NOT_DETECTED;
-enum spi_flash_status res_partition_status = SPI_FLASH_NOT_DETECTED;
+
 enum spi_flash_status m_firmware_partition_status = SPI_FLASH_NOT_DETECTED;
 
 // Mutex for synchronizing SPI flash access
@@ -69,12 +69,6 @@ int log_flash_prog(const struct lfs_config *c, lfs_block_t block, lfs_off_t offs
                    const void *buffer, lfs_size_t size);
 int log_flash_erase(const struct lfs_config *c, lfs_block_t block);
 
-// Custom flash operations for res partition
-int res_flash_read(const struct lfs_config *c, lfs_block_t block, lfs_off_t offset, void *buffer,
-                   lfs_size_t size);
-int res_flash_prog(const struct lfs_config *c, lfs_block_t block, lfs_off_t offset,
-                   const void *buffer, lfs_size_t size);
-int res_flash_erase(const struct lfs_config *c, lfs_block_t block);
 
 // Custom flash operations for m_firmware partition
 int m_firmware_flash_read(const struct lfs_config *c, lfs_block_t block, lfs_off_t offset,
@@ -112,19 +106,7 @@ const struct lfs_config log_partition_cfg = {
     .block_cycles = 500,
 };
 
-const struct lfs_config res_partition_cfg = {
-    .read = res_flash_read,
-    .prog = res_flash_prog,
-    .erase = res_flash_erase,
-    .sync = custom_flash_sync,
-    .read_size = 256,
-    .prog_size = 256,
-    .block_size = BLOCK_SIZE,
-    .block_count = RES_PARTITION_BLOCK_COUNT,
-    .cache_size = 256,
-    .lookahead_size = 256,
-    .block_cycles = 500,
-};
+
 
 const struct lfs_config m_firmware_partition_cfg = {
     .read = m_firmware_flash_read,
@@ -143,7 +125,7 @@ const struct lfs_config m_firmware_partition_cfg = {
 // Declare lfs_t objects to hold the LittleFS state
 struct lfs layout_littlefs;
 struct lfs log_littlefs;
-struct lfs res_littlefs;
+
 struct lfs m_firmware_littlefs;
 
 // Adjust the mount point configuration to use your custom lfs_config
@@ -161,12 +143,6 @@ static struct fs_mount_t log_mount_point = {
     .storage_dev = NULL,
 };
 
-static struct fs_mount_t res_mount_point = {
-    .type = FS_LITTLEFS,
-    .mnt_point = "/resv",
-    .fs_data = (void *)&res_partition_cfg,
-    .storage_dev = NULL,
-};
 
 static struct fs_mount_t m_firmware_mount_point = {
     .type = FS_LITTLEFS,
@@ -329,52 +305,8 @@ int log_flash_erase(const struct lfs_config *c, lfs_block_t block) {
     return rc;
 }
 
-// Implementations for res partition flash operations
-int res_flash_read(const struct lfs_config *c, lfs_block_t block, lfs_off_t offset, void *buffer,
-                   lfs_size_t size) {
-    int rc;
 
-    k_mutex_lock(&spi_flash_mutex, K_FOREVER);
-    rc = flash_area_read(fa_res_partition, (block * c->block_size) + offset, buffer, size);
-    k_mutex_unlock(&spi_flash_mutex);
 
-    if (rc < 0) {
-        LOG_ERR("Res: Failed to read block %d at offset %d: %d", block, offset, rc);
-    }
-
-    return rc;
-}
-
-int res_flash_prog(const struct lfs_config *c, lfs_block_t block, lfs_off_t offset,
-                   const void *buffer, lfs_size_t size) {
-    int rc;
-
-    k_mutex_lock(&spi_flash_mutex, K_FOREVER);
-    rc = flash_area_write(fa_res_partition, (block * c->block_size) + offset, buffer, size);
-    k_mutex_unlock(&spi_flash_mutex);
-
-    if (rc < 0) {
-        LOG_ERR("Res: Failed to program block %d at offset %d: %d", block, offset, rc);
-    }
-
-    return rc;
-}
-
-int res_flash_erase(const struct lfs_config *c, lfs_block_t block) {
-    int rc;
-    uint32_t offset = block * c->block_size;
-    uint32_t size = c->block_size;
-
-    k_mutex_lock(&spi_flash_mutex, K_FOREVER);
-    rc = flash_area_erase(fa_res_partition, offset, size);
-    k_mutex_unlock(&spi_flash_mutex);
-
-    if (rc < 0) {
-        LOG_ERR("Res: Failed to erase block %d: %d", block, rc);
-    }
-
-    return rc;
-}
 
 // Implementations for m_firmware partition flash operations
 int m_firmware_flash_read(const struct lfs_config *c, lfs_block_t block, lfs_off_t offset,
@@ -457,13 +389,6 @@ int spiflash_init(void) {
     }
     log_partition_status = SPI_FLASH_DETECTED;
 
-    rc = flash_area_open(RES_PARTITION_ID, &fa_res_partition);
-    if (rc < 0) {
-        LOG_ERR("Failed to open flash area for res partition: %d", rc);
-        printf("Failed to open flash area for res partition: %d\n\r", rc);
-        return rc;
-    }
-    res_partition_status = SPI_FLASH_DETECTED;
 
     rc = flash_area_open(M_FIRMWARE_PARTITION_ID, &fa_m_firmware_partition);
     if (rc < 0) {
@@ -552,45 +477,7 @@ int spiflash_init(void) {
         printf("Failed to mount Log_partition: %d\n\r", rc);
     }
 
-    // Mount the res partition
-    LOG_INF("Attempting to mount Res_partition...");
-    printf( "Attempting to mount Res_partition...\n\r");
-    rc = lfs_mount(&res_littlefs, &res_partition_cfg);
-    if (rc == 0) {
-        LOG_INF("Res_partition mounted at %s", res_mount_point.mnt_point);
-        printf("Res_partition mounted at %s\n\r",
-                                       res_mount_point.mnt_point);
-        res_partition_status = SPI_FLASH_MOUNTED;
-    } else if (rc == LFS_ERR_CORRUPT) {
-        LOG_INF("Formatting Res_partition...");
-        printf( "Formatting Res_partition...\n\r");
-
-        rc = lfs_format(&res_littlefs, &res_partition_cfg);
-        if (rc == 0) {
-            LOG_INF("Res_partition formatted successfully, retrying mount...");
-            printf(
-                                 "Res_partition formatted successfully, retrying mount...\n\r");
-            res_partition_status = SPI_FLASH_FORMATTED;
-
-            rc = lfs_mount(&res_littlefs, &res_partition_cfg);
-            if (rc == 0) {
-                LOG_INF("Res_partition mounted successfully after format");
-                printf("Res_partition mounted successfully after format\n\r");
-                res_partition_status = SPI_FLASH_MOUNTED;
-            } else {
-                LOG_ERR("Failed to mount Res_partition after format: %d", rc);
-                printf("Failed to mount Res_partition after format: %d\n\r", rc);
-            }
-        } else {
-            LOG_ERR("Failed to format Res_partition: %d", rc);
-            printf("Failed to format Res_partition: %d\n\r",
-                                           rc);
-        }
-    } else {
-        LOG_ERR("Failed to mount Res_partition: %d", rc);
-        printf("Failed to mount Res_partition: %d\n\r", rc);
-    }
-
+   
     // Mount the m_firmware partition
     LOG_INF("Attempting to mount M_Firmware_partition...");
     printf( "Attempting to mount M_Firmware_partition...\n\r");
