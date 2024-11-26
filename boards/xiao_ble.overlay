@@ -4,9 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-
-
-
  &flash0 {
 	/*
 	 *  flash layout for naya 
@@ -73,4 +70,25 @@
 	chosen {
 		zephyr,code-partition = &slot0_partition;
 	};
+};
+
+
+/{
+
+	leds {
+		compatible = "gpio-leds";
+		led0: led_0 {
+			gpios = <&gpio0 28 GPIO_ACTIVE_LOW>;
+			label = "Red LED";
+		};
+		led1: led_1 {
+			gpios = <&gpio0 03 GPIO_ACTIVE_LOW>;
+			label = "Green LED";
+		};
+		led2: led_2 {
+			gpios = <&gpio0 30 GPIO_ACTIVE_LOW>;
+			label = "Blue LED";
+		};
+	};
+
 };
