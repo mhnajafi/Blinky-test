@@ -8,6 +8,8 @@
 #include <zephyr/kernel.h>
 #include <zephyr/drivers/gpio.h>
 
+#include "spi_flash.h"
+
 /* 1000 msec = 1 sec */
 #define SLEEP_TIME_MS   500
 
@@ -20,7 +22,13 @@
  * A build error on this line means your board is unsupported.
  * See the sample documentation for information on how to fix this.
  */
-static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED1_NODE, gpios);
+static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED2_NODE, gpios);
+
+
+void reset_to_uf2(void) {
+  NRF_POWER->GPREGRET = 0x57; // 0xA8 OTA, 0x4e Serial
+  NVIC_SystemReset();         // or sd_nvic_SystemReset();
+}
 
 
 int main(void)
@@ -38,9 +46,25 @@ int main(void)
 	if (ret < 0) return 0;
 
 
+	spiflash_init();
+
 	printf("Initializaion complete\n");
 
 
+	lfs_file_t file;
+
+	// if (lfs_file_open(&m_firmware_littlefs,&file,"first-fil.txt",LFS_O_RDWR)==0)
+	// {
+	// 	printf("\nFile is exist!\n");
+
+	// }
+	// else
+	// {
+	// 	printf("\nFile is not exist!\n");
+	// }
+
+
+	int counter=0;
 	while (1) {
 		ret = gpio_pin_toggle_dt(&led);
 		if (ret < 0) return 0;
@@ -48,6 +72,9 @@ int main(void)
 		led_state = !led_state;
 		printf("LED state: %s\n", led_state ? "ON" : "OFF");
 		k_msleep(SLEEP_TIME_MS);
+
+		if( counter > 10) reset_to_uf2();
+		else counter++;
 	}
 	return 0;
 }
