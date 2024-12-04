@@ -30,7 +30,7 @@
 		
 		mcuboot_partition: partition@26000 {
 			label = "mcuboot";
-			reg = <0x00026000 0x00012000>;
+			reg = <0x00027000 0x00012000>;
 		};
 		
 		slot0_partition: partition@38000 {
@@ -68,7 +68,7 @@
 
 / {
 	chosen {
-		zephyr,code-partition = &slot0_partition;
+		zephyr,code-partition = &reserved_partition_0;
 	};
 };
 
@@ -92,3 +92,46 @@
 	};
 
 };
+
+&reg0 {
+	// regulator-initial-mode = <NRF5X_REG_MODE_DCDC>;
+	status = "okay";
+};
+
+
+&reg1 {
+	regulator-initial-mode = <NRF5X_REG_MODE_LDO>;
+	status = "okay";
+};
+
+
+&uicr {
+	nfct-pins-as-gpios;
+	gpio-as-nreset;
+	// regout0=<0x05>;
+	status = "okay";
+};
+
+
+
+// &dcdc_regulator {
+//     status = "okay";
+//     regulator-name = "dcdc-hv";
+//     regulator-always-on;
+//     regulator-min-microvolt = <3300000>;
+//     regulator-max-microvolt = <3300000>;
+// };
+
+// nrf_power: power@40000000 {
+//     compatible = "nordic,nrf-power";
+//     reg = <0x40000000 0x1000>;
+// 	status = "okay";
+//     dcdcen = <1>;
+//     dcdcenhv = <1>;
+// };
+
+// &nrf_power {
+//     status = "okay";
+//     dcdcen = <1>;
+//     dcdcenhv = <1>;
+// };

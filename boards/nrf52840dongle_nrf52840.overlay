@@ -1,0 +1,86 @@
+/*
+ * Copyright (c) 2020 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+ &flash0 {
+	/*
+	 *  flash layout for naya 
+	 *
+	 * 0x00000000 SoftDevice s140 v7    (156 kB)
+	 * 0x00026000 mcuboot partition     (72 kB)
+ 	 * 0x00038000 image-0 partition     (348 kB)
+ 	 * 0x0008f000 image-1 partition     (348 kB)
+	 * 0x000e6000 scratch partition     (24 kB)
+	 * 0x000ec000 Storage partition     (32 kB)
+	 * 0x000f4000 DFU boot partition    (48 kB)
+	 */
+
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		reserved_partition_0: partition@0 {
+			label = "SoftDevice";
+			read-only;
+			reg = <0x00000000 0x00026000>;
+		};
+		
+		mcuboot_partition: partition@26000 {
+			label = "mcuboot";
+			reg = <0x00026000 0x00012000>;
+		};
+		
+
+	};
+};
+
+
+/ {
+	chosen {
+		zephyr,code-partition = &mcuboot_partition;
+	};
+};
+
+
+/{
+
+	leds {
+		compatible = "gpio-leds";
+		led0: led_0 {
+			gpios = <&gpio0 28 GPIO_ACTIVE_LOW>;
+			label = "Red LED";
+		};
+		led1: led_1 {
+			gpios = <&gpio0 03 GPIO_ACTIVE_LOW>;
+			label = "Green LED";
+		};
+		led2: led_2 {
+			gpios = <&gpio0 30 GPIO_ACTIVE_LOW>;
+			label = "Blue LED";
+		};
+	};
+
+};
+
+&reg1 {
+	regulator-initial-mode = <NRF5X_REG_MODE_LDO>;
+	// status = "okay";
+};
+
+&reg0 {
+
+	status = "disabled";
+};
+
+// &reg0 {
+// 	regulator-initial-mode = <NRF5X_REG_MODE_LDO>;
+// 	status = "okay";
+// };
+
+
+&uicr {
+	gpio-as-nreset;
+};

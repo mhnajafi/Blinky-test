@@ -20,7 +20,7 @@
  * A build error on this line means your board is unsupported.
  * See the sample documentation for information on how to fix this.
  */
-static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED1_NODE, gpios);
+static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED2_NODE, gpios);
 
 
 int main(void)
@@ -40,6 +40,11 @@ int main(void)
 
 	printf("Initializaion complete\n");
 
+
+	printf("NRF_CLOCK->LFCLKSRC = %d\n",NRF_CLOCK->LFCLKSRC);
+	printf("NRF_POWER->DCDCEN0 = %d \n",NRF_POWER->DCDCEN0);
+	printf("NRF_POWER->DCDCEN = %d \n",NRF_POWER->DCDCEN);
+	// printf("Initializaion complete\n");
 
 	while (1) {
 		ret = gpio_pin_toggle_dt(&led);
