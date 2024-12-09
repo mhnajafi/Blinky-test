@@ -41,11 +41,6 @@ int main(void)
 	printf("Initializaion complete\n");
 
 
-	printf("NRF_CLOCK->LFCLKSRC = %d\n",NRF_CLOCK->LFCLKSRC);
-	printf("NRF_POWER->DCDCEN0 = %d \n",NRF_POWER->DCDCEN0);
-	printf("NRF_POWER->DCDCEN = %d \n",NRF_POWER->DCDCEN);
-	// printf("Initializaion complete\n");
-
 	while (1) {
 		ret = gpio_pin_toggle_dt(&led);
 		if (ret < 0) return 0;
